@@ -1,0 +1,46 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Style {
+  id             String    @id @default(cuid())
+  styleId        String    @unique // The human-readable ID (e.g., M-JKT-001)
+  styleName      String
+  season         String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Step 1: Cut & Construction
+  fit            String
+  fabricType     String
+  construction   String?   @db.Text
+
+  // Step 2: Components (One-to-Many)
+  components     Component[]
+
+  // Step 3: Costing & Overheads
+  laborCost      Decimal   @default(0) @db.Decimal(10, 2)
+  overhead       Decimal   @default(0) @db.Decimal(10, 2)
+  logisticCost   Decimal   @default(0) @db.Decimal(10, 2)
+}
+
+model Component {
+  id           String   @id @default(cuid())
+  category     String   // e.g., Main Fabric, Trim, Thread
+  description  String
+  usage        Decimal  @db.Decimal(10, 4)
+  unit         String   // e.g., Mtr, Yds, Pcs
+  unitCost     Decimal  @db.Decimal(10, 2)
+  wastage      Decimal  @default(0) @db.Decimal(5, 2) // Percentage
+  
+  // Relations
+  styleId      String
+  style        Style    @relation(fields: [styleId], references: [id], onDelete: Cascade)
+}
