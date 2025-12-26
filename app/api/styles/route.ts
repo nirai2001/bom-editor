@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     } = body;
 
     // We use an "upsert" approach so the same API works for Create and Update
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // 1. Delete existing components if we are updating an existing style
       if (id) {
         await tx.component.deleteMany({
