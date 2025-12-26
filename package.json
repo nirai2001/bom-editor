@@ -16,7 +16,7 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "@prisma/config": "6.19.0"
+    "@prisma/config": "6.15.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
